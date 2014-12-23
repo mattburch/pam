@@ -1,0 +1,58 @@
+<ng-include src="'shared/nav/nav.html'"></ng-include>
+<div class="row">
+    <div class="col-xs-2">
+        <div class="row">
+            <div class="col-xs-2" style="height: 15%"></div>
+        </div>
+        <div class="row">
+            <div class="row">
+                <div class="col-xs-2 subject-header">
+                    <div><h3>Subjects</h3></div>
+                </div>
+            </div>
+            <form>
+                <div ng-repeat="sub in subList" class="col-xs-2 subject-list">
+                    <input type="radio" name="radiolist" id="{{sub}}" value="{{sub}}" ng-model="button.radio" ng-checked="checkSubject(sub)"/>
+                    <label for="{{sub}}">
+                        <div class="fa-stack">
+                            <i class="fa fa-square-o fa-stack-lg"></i>
+                            <i class="fa fa-check fa-stack-lg"></i>
+                        </div>
+                        {{sub}}
+                    </label>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="col-xs-6 col-xs-offset-1">
+        <form id="post-content" class="form-horizontal" role="form" ng-submit="save()">
+            <div class="form-group">
+                <input id="subject" type="text" class="form-control" ng-model="subject">
+                <input type="text" class="form-control" ng-model="title">
+            </div>
+            <div id="textbox" ng-paste="imgPaste($event)" contenteditable="true" class="form-control textbox"></div>
+            <br>
+            <button type="submit" class="btn btn-default ">Save</button>
+        </form>
+        <br>
+        <div class="center-me">
+            <span class="red-alert">{{alert}}</span>
+        </div>
+    </div>
+    <div class="col-xs-2" style="width: 20%">
+       <div ng-repeat="img in imgList" ng-init="check=[]" ng-mouseenter="check[$index]=true" ng-mouseleave="check[$index]=false;">
+            <div class="row">
+                <div class="image-list col-xs-1">
+                    <a href="/notes/{{id}}/{{img}}">
+                        <img class="img-responsive" src="/notes/{{id}}/{{img}}" alt="{{img}} "/>
+                    </a>
+                </div>
+                <div class="col-xs-1 image-action" style="width: 2%">
+                    <div ng-show="check[$index]" ng-click="deleteIMG(img)" class="pull-right delete-button"><i class="fa fa-eraser fa-2x" ></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

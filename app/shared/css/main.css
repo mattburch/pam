@@ -1,0 +1,159 @@
+@import url(http://fonts.googleapis.com/css?family=Lato:300);
+@import '../bower_components/bootstrap/less/type.less';
+body {
+    padding-top: 60px;
+    font-family:Lato, sans-serif;
+}
+body .container {
+    max-width: 800px;
+    width: auto;
+}
+.pam-navbar {
+    margin-left: 0;
+}
+.navbar-default {
+    background-color: #3498db;
+}
+.navbar-default {
+    color: #ffffff;
+}
+.navbar-default .navbar-brand, .navbar-default .navbar-nav > li > a {
+    color: #ffffff;
+}
+.hide-submit {
+    position: absolute;
+    visibility: hidden;
+}
+.result-content {
+    border-bottom: 1px solid #efefef;
+    max-height: 150px;
+    overflow: hidden;
+}
+.delete-button {
+    cursor: pointer;
+    background: rgba(231, 76, 60, 0.5);
+    border-radius: 10px;
+    padding: 5px;
+    margin-left: 5px;
+}
+.edit-button {
+    cursor: pointer;
+    background: rgba(52, 152, 219, 0.5);
+    border-radius: 10px;
+    padding: 5px;
+}
+.red-alert {
+    color: #e74c3c;
+}
+.center-me {
+    text-align: center;
+}
+.show-more {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+.result img {
+    font-family: FontAwesome;
+    max-width: 500px;
+    max-height: 400px;
+    display: block;
+    margin: auto;
+    border: 2px solid #888888;
+}
+.subject-header {
+    display: list-item;
+    display: break-word;
+    list-style: none;
+    text-align: center;
+    margin-left: 15px;
+    width: 100%;
+    overflow: hidden;
+}
+.subject-list {
+    display: list-item;
+    display: break-word;
+    list-style: none;
+    margin-left: 15px;
+    width: 100%;
+    height: 20px;
+    overflow: hidden;
+}
+/* Styling the DIV and Label */
+.subject-list input[type="radio"] + label,
+.subject-list input[type="checkbox"] + label {
+    display: inline-block;
+    font-weight: normal;
+    margin-bottom: 0;
+}
+.subject-list input[type="radio"] + label div,
+.subject-list input[type="checkbox"] + label div {
+    width: 13px;
+}
+.subject-list input[type="radio"],
+.subject-list input[type="checkbox"] {
+    display: none;
+}
+/* Hidding the "check" status of inputs */
+.subject-list input[type="radio"] + label .fa-check {
+    display: none;
+}
+.subject-list input[type="checkbox"] + label .fa-check  {
+    display: none;
+}
+/* Styling the "check" status */
+.subject-list input[type="radio"]:checked + label .fa-check,
+.subject-list input[type="checkbox"]:checked + label .fa-check {
+    display: block;
+    color: #3498db;
+}
+/* Styling checkboxes */
+.subject-list input[type="radio"] + label .fa-square-o,
+.subject-list input[type="checkbox"] + label .fa-square-o {
+    position: relative;
+    bottom: -.53em;
+}
+.subject-list input[type="radio"]:checked + label .fa-check,
+.subject-list input[type="checkbox"]:checked + label .fa-check {
+    position: relative;
+    bottom: .56em;
+}
+.image-action {
+    margin-left: 20px;
+    margin-top: 80px;
+    height: 40px;
+    width: 40px;
+}
+.image-list {
+    display: list-item;
+    list-style: none;
+    margin-top: 20px;
+    width: 200px;
+    height: 100px;
+}
+.image-list img {
+    width: 100%;
+    height: 100%;
+    border: 1px solid #888888;
+    box-shadow: 5px 5px 5px #888888;
+}
+.textbox {
+    font-family: FontAwesome;
+    max-width: 100%;
+    height: 300px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    cursor: test;
+    word-wrap: break-word;
+    resize: both;
+}
+.form-control {
+    margin-bottom: 10px;
+}
+.form-control img {
+    max-width: 100%;
+    height: auto;
+    width: auto;
+}
+blockquote {
+    font-size: 14px;
+}
