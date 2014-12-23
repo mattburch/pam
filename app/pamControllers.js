@@ -98,7 +98,7 @@ pamApp.controller('EditCtrl', function($scope, $http, $routeParams, $location) {
         success( function(data){
             // Replace image tag with handlebars ID of the POST image
             data = data.replace(/"/g, '')
-            document.getElementById("textbox").innerHTML = html.replace(/<img src=.*?>/g, "[![" + data + "](/notes/" + $routeParams.id + "/" + data + ")](" + $routeParams.id + "/" + data + ")");
+            document.getElementById("textbox").innerHTML = html.replace(/<img src=.*?>/, "[![" + data + "](/notes/" + $routeParams.id + "/" + data + ")](" + $routeParams.id + "/" + data + ")");
             getIMG();
         }).error(handleError)
     }
@@ -245,6 +245,9 @@ pamApp.controller('SearchCtrl', function($scope, $http, $location, marked) {
         var term = encodeURIComponent($scope.searchTerm);
         $http.get('/search?q=' + term + '&s=' + shown).
         success(function(data) {
+            data.results.forEach( function(r){
+                r.content = imgEncode(marked(htmlDecode(r.content)));
+            });
             Array.prototype.push.apply($scope.results, data.results);
             shown += 10;
             $scope.moreResults = data.count > shown;
