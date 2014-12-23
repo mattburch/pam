@@ -25,6 +25,7 @@ body .container {
     visibility: hidden;
 }
 .result-content {
+    font-family: FontAwesome;
     border-bottom: 1px solid #efefef;
     max-height: 150px;
     overflow: hidden;
