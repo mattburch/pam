@@ -29,6 +29,12 @@ body .container {
     max-height: 150px;
     overflow: hidden;
 }
+.results {
+    font-family: FontAwesome;
+    max-width: 100%;
+    display: inline-block;
+    word-wrap: break-word;
+}
 .delete-button {
     cursor: pointer;
     background: rgba(231, 76, 60, 0.5);
