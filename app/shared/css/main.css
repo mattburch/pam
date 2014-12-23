@@ -36,6 +36,9 @@ body .container {
     word-wrap: break-word;
     white-space: normal;
 }
+.results pre code {
+    white-space: pre-wrap;
+}
 .results code {
     white-space: normal;
 }
