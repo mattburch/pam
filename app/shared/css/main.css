@@ -34,6 +34,10 @@ body .container {
     max-width: 100%;
     display: inline-block;
     word-wrap: break-word;
+    white-space: normal;
+}
+.results code {
+    white-space: normal;
 }
 .delete-button {
     cursor: pointer;
