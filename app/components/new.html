@@ -1,6 +1,30 @@
 <ng-include src="'shared/nav/nav.html'"></ng-include>
 <div class="row">
-    <div class="col-xs-6 col-xs-offset-3">
+    <div class="col-xs-2">
+        <div class="row">
+            <div class="col-xs-2" style="height: 10%"></div>
+        </div>
+        <div class="row">
+            <div class="row">
+                <div class="col-xs-2 subject-header">
+                    <div><h3>Subjects</h3></div>
+                </div>
+            </div>
+            <form>
+                <div ng-repeat="sub in subList" class="col-xs-2 subject-list">
+                    <input type="radio" name="radiolist" id="{{sub}}" value="{{sub}}" ng-model="button.radio" ng-checked="checkSubject(sub)"/>
+                    <label for="{{sub}}">
+                        <div class="fa-stack">
+                            <i class="fa fa-square-o fa-stack-lg"></i>
+                            <i class="fa fa-check fa-stack-lg"></i>
+                        </div>
+                        {{sub}}
+                    </label>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="col-xs-6 col-xs-offset-1">
         <form class="form-horizontal" role="form" ng-submit="add()">
             <div class="form-group">
                 <div class="col-xs-12">

@@ -136,6 +136,9 @@ pamApp.controller('EditCtrl', function($scope, $http, $routeParams, $location) {
 });
 
 pamApp.controller('NewCtrl', function($scope, $http, $location) {
+    $scope.button = {radio: ''};
+    getSubList();
+
     $scope.add = function() {
         var subject = $scope.subject;
         var title = $scope.title;
@@ -161,8 +164,27 @@ pamApp.controller('NewCtrl', function($scope, $http, $location) {
         });
     };
 
+    $scope.checkSubject = function(sub) {
+        return sub == $scope.subject;
+    }
+
+    $scope.$watch('button.radio', function(newVal, oldVal) {
+        $scope.subject = newVal;
+    })
+
+    function getSubList() {
+        $http.get('/notes/sublist').
+        success( function(data) {
+            $scope.subList = data;
+        }).error(handleError);
+     }
+
     function setAlert(message) {
         $scope.alert = message;
+    }
+
+    function handleError() {
+        $scope.alert = "Welp, something wen't wrong!";
     }
 });
 
