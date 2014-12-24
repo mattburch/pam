@@ -143,14 +143,13 @@ pamApp.controller('NewCtrl', function($scope, $http, $location) {
         var subject = $scope.subject;
         var title = $scope.title;
         var content = " ";
-        if (typeof subject !== 'string' || title.length < 1) {
+        if (typeof subject !== 'string' || subject.length < 1) {
             return setAlert("You're going to have to set a subject!");
         }
         if (typeof title !== 'string' || title.length < 1) {
             return setAlert("You're going to have to set a title!");
         }
         $http.post('/notes', {
-            "action": "addNote",
             "subject": subject,
             "title": $scope.title,
             "content": content
