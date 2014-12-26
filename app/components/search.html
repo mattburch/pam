@@ -27,6 +27,11 @@
             </div>
         </form>
     </div>
+    <div class="row" ng-show="alert">
+        <div class="col-xs-6">
+            <div class="center-me red-alert">{{alert}}</div>
+        </div>
+    </div>
     <div class="col-xs-6 col-xs-offset-1" ng-show="results">
         <p>{{count}} result(s) found.</p>
         <div class="result" ng-repeat="result in results">
@@ -47,10 +52,5 @@
         <div class="center-me show-more" ng-show="moreResults">
             <span style="cursor: pointer" ng-click="more()">Show more...</span>
         </div>
-    </div>
-</div>
-<div class="row" ng-show="alert">
-    <div class="col-xs-6 col-xs-offset-3">
-        <div class="center-me red-alert">{{alert}}</div>
     </div>
 </div>
