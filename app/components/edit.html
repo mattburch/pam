@@ -39,16 +39,15 @@
             <span class="red-alert">{{alert}}</span>
         </div>
     </div>
-    <div class="col-xs-2" style="width: 20%">
+    <div class="col-xs-1" style="width: 2%"></div>
+    <div class="col-xs-2">
        <div ng-repeat="img in imgList" ng-init="check=[]" ng-mouseenter="check[$index]=true" ng-mouseleave="check[$index]=false;">
             <div class="row">
-                <div class="image-list col-xs-1">
+                <div class="image-list col-xs-2">
                     <a href="/notes/{{id}}/{{img}}">
                         <img class="img-responsive" src="/notes/{{id}}/{{img}}" alt="{{img}} "/>
                     </a>
-                </div>
-                <div class="col-xs-1 image-action" style="width: 2%">
-                    <div ng-show="check[$index]" ng-click="deleteIMG(img)" class="pull-right delete-button"><i class="fa fa-eraser fa-2x" ></i></div>
+                <div ng-show="check[$index]" ng-click="deleteIMG(img)" class="image-action delete-button"><i class="fa fa-eraser fa-2x" ></i></div>
                 </div>
             </div>
         </div>

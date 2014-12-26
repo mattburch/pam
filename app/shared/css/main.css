@@ -132,13 +132,14 @@ body .container {
     bottom: .56em;
 }
 .image-action {
-    margin-left: 20px;
-    margin-top: 80px;
+    display: inline-flex;
+    margin-left: 180px;
+    margin-top: -50px;
     height: 40px;
     width: 40px;
 }
 .image-list {
-    display: list-item;
+    display: inline;
     list-style: none;
     margin-top: 20px;
     width: 200px;
