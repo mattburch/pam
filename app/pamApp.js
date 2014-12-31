@@ -104,7 +104,7 @@ pamApp.directive('pamTextbox', ['$routeParams', '$http', function($routeParams, 
       });
 
       function imgPost() {
-        var html = element[0].innerHTML
+        var html = element[0].innerHTML;
         // extract image type and base64 content and post to DB
         $http.post('/notes/' + $routeParams.id, {
             "imgType": html.match(/data:(.*?);/)[1],
@@ -123,6 +123,16 @@ pamApp.directive('pamTextbox', ['$routeParams', '$http', function($routeParams, 
               scope.imgList = data;
           })
       }
+
+      element.on('keydown', function(e) {
+        // remove <div> insertion in Chrmoe
+        if (!!window.chrome && e.keyCode === 13 ) {
+          e.preventDefault();
+          document.execCommand("insertHTML", false, '<br><br>');
+        }
+        return false;
+      })
+
     }
   }
 }])
