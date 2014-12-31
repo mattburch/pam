@@ -29,38 +29,6 @@ pamApp.controller('EditCtrl', function($scope, $http, $routeParams, $location) {
         }).error(handleError);
     }
 
-    $scope.imgPaste = function(e) {
-        var items = (e.clipboardData || e.originalEvent.clipboardData).items;
-        var textbox = document.getElementById("textbox");
-        if (items && items[0].type == "text/plain") {
-            return
-        } else if (items) {
-            var blob = items[0].getAsFile();
-            var reader = new FileReader();
-            reader.onload = function(event){
-                var imgurl = event.target.result;
-                $http.post('/notes/' + $routeParams.id, {
-                    "imgType": imgurl.match(/data:(.*?);/)[1],
-                    "imgContent": imgurl.match(/base64,(.*)/)[1]
-                }).
-                success( function(data){
-                    // Replace image tag with handlebars ID of the POST image
-                    data = data.replace(/"/g, '')
-                    var result = document.createTextNode("[![" + data + "](/notes/" + $routeParams.id + "/" + data + ")](" + $routeParams.id + "/" + data + ")")
-                    textbox.appendChild(result);
-                    getIMG();
-                }).error(handleError)
-            };
-            reader.readAsDataURL(blob);
-        } else if (e.clipboardData.getData('text')) {
-            // if clipboard data text return
-            return
-        } else {
-            // else wait on window for paste event and POST contents
-            window.setTimeout(imgPost, 1, true);
-        }
-    }
-
     $scope.updateNote = function() {
         $http.put('/notes/' + $routeParams.id, {
             "subject": subject,
@@ -87,21 +55,6 @@ pamApp.controller('EditCtrl', function($scope, $http, $routeParams, $location) {
     $scope.$watch('button.radio', function(newVal, oldVal) {
         $scope.subject = newVal;
     })
-
-    function imgPost() {
-        var html = document.getElementById("textbox").innerHTML;
-        // extract image type and base64 content and post to DB
-        $http.post('/notes/' + $routeParams.id, {
-            "imgType": html.match(/data:(.*?);/)[1],
-            "imgContent": html.match(/base64,(.*?)"/)[1]
-        }).
-        success( function(data){
-            // Replace image tag with handlebars ID of the POST image
-            data = data.replace(/"/g, '')
-            document.getElementById("textbox").innerHTML = html.replace(/<img src=.*?>/, "[![" + data + "](/notes/" + $routeParams.id + "/" + data + ")](" + $routeParams.id + "/" + data + ")");
-            getIMG();
-        }).error(handleError)
-    }
 
     function getIMG() {
         $http.get('/notes/' + $routeParams.id + '/img').

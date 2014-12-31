@@ -148,7 +148,7 @@ func DB() martini.Handler {
 }
 
 func main() {
-	arguments, err := docopt.Parse(usage, nil, true, "pam 2.0.0", false)
+	arguments, err := docopt.Parse(usage, nil, true, "pam 2.0.2", false)
 	if err != nil {
 		log.Fatal("Error parsing usage. Error: ", err.Error())
 	}
