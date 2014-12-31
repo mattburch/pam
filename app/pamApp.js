@@ -86,15 +86,16 @@ pamApp.directive('pamTextbox', ['$routeParams', '$http', function($routeParams, 
                 success( function(data){
                     // Replace image tag with handlebars ID of the POST image
                     data = data.replace(/"/g, '')
-                    var result = document.createTextNode("[![" + data + "](/notes/" + $routeParams.id + "/" + data + ")](" + $routeParams.id + "/" + data + ")")
-                    textbox.appendChild(result);
+                    var result = "[![" + data + "](/notes/" + $routeParams.id + "/" + data + ")](" + $routeParams.id + "/" + data + ")"
+                    document.execCommand("insertHTML", false, result)
                     getIMG();
                 }).error(handleError)
             };
             reader.readAsDataURL(blob);
         } else if (e.clipboardData.getData('text')) {
-            // if clipboard data text return
-            return
+            // paste text clipboard data and strip style editing
+            e.preventDefault();
+            document.execCommand("insertHTML", false, e.clipboardData.getData('text'))
         } else {
             // else wait on window for paste event and POST contents
             window.setTimeout(imgPost, 0, true);
