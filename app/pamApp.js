@@ -32,7 +32,7 @@ pamApp.config(function(markedProvider) {
       sanitize: true,
       smartLists: false,
       smartypants: true,
-      highlight: function(lang, code) {
+      highlight: function(code, lang) {
         if (lang && code) {
             return hljs.highlight(lang, code).value;
         }
@@ -83,8 +83,7 @@ pamApp.directive('pamTextbox', ['$routeParams', '$http', function($routeParams, 
                 $http.post('/notes/' + $routeParams.id, {
                     "imgType": imgurl.match(/data:(.*?);/)[1],
                     "imgContent": imgurl.match(/base64,(.*)/)[1]
-                }).
-                success( function(data){
+                }).success( function(data){
                     // Replace image tag with handlebars ID of the POST image
                     data = data.replace(/"/g, '')
                     var result = "[![" + data + "](/notes/" + $routeParams.id + "/" + data + ")](" + $routeParams.id + "/" + data + ")"
@@ -102,6 +101,15 @@ pamApp.directive('pamTextbox', ['$routeParams', '$http', function($routeParams, 
             window.setTimeout(imgPost, 0, true);
         }
       });
+
+      element.on('keydown', function(e) {
+        // remove <div> insertion in Chrmoe
+        if (!!window.chrome && e.keyCode === 13 ) {
+          e.preventDefault();
+          document.execCommand("insertHTML", false, '<br><br>');
+        }
+        return false;
+      })
 
       function imgPost() {
         var html = element[0].innerHTML;
@@ -123,15 +131,6 @@ pamApp.directive('pamTextbox', ['$routeParams', '$http', function($routeParams, 
               scope.imgList = data;
           })
       }
-
-      element.on('keydown', function(e) {
-        // remove <div> insertion in Chrmoe
-        if (!!window.chrome && e.keyCode === 13 ) {
-          e.preventDefault();
-          document.execCommand("insertHTML", false, '<br><br>');
-        }
-        return false;
-      })
 
     }
   }
