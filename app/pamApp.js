@@ -85,9 +85,9 @@ pamApp.directive('pamTextbox', ['$routeParams', '$http', function($routeParams, 
                     "imgContent": imgurl.match(/base64,(.*)/)[1]
                 }).success( function(data){
                     // Replace image tag with handlebars ID of the POST image
-                    data = data.replace(/"/g, '')
-                    var result = "[![" + data + "](/notes/" + $routeParams.id + "/" + data + ")](" + $routeParams.id + "/" + data + ")"
-                    document.execCommand("insertHTML", false, result)
+                    data = data.replace(/"/g, '');
+                    var result = "[![" + data + "](/notes/" + $routeParams.id + "/" + data + ")](" + $routeParams.id + "/" + data + ")";
+                    document.execCommand("insertHTML", false, result);
                     getIMG();
                 }).error(handleError)
             };

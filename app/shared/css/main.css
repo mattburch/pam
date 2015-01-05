@@ -42,6 +42,7 @@ body .container {
 }
 .results code {
     white-space: normal;
+    font-size: 12px;
 }
 .delete-button {
     cursor: pointer;
