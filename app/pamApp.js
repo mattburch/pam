@@ -30,7 +30,7 @@ pamApp.config(function(markedProvider) {
       breaks: true,
       pedantic: false,
       sanitize: true,
-      smartLists: false,
+      smartLists: true,
       smartypants: true,
       highlight: function(code, lang) {
         if (lang && code) {
@@ -74,7 +74,7 @@ pamApp.directive('pamTextbox', ['$routeParams', '$http', function($routeParams, 
         var textbox = element[0];
         if (items && items[0].type == "text/plain") {
             e.preventDefault();
-            document.execCommand("insertHTML", false, e.clipboardData.getData('text'));
+            document.execCommand("insertHTML", false, stripNewLine(e.clipboardData.getData('text')));
         } else if (items) {
             var blob = items[0].getAsFile();
             var reader = new FileReader();
@@ -95,7 +95,7 @@ pamApp.directive('pamTextbox', ['$routeParams', '$http', function($routeParams, 
         } else if (e.clipboardData.getData('text')) {
             // paste text clipboard data and strip style editing
             e.preventDefault();
-            document.execCommand("insertHTML", false, e.clipboardData.getData('text'));
+            document.execCommand("insertHTML", false, stripNewLine(e.clipboardData.getData('text')));
         } else {
             // else wait on window for paste event and POST contents
             window.setTimeout(imgPost, 0, true);
@@ -106,7 +106,7 @@ pamApp.directive('pamTextbox', ['$routeParams', '$http', function($routeParams, 
         // remove <div> insertion in Chrmoe
         if (!!window.chrome && e.keyCode === 13 ) {
           e.preventDefault();
-          document.execCommand("insertHTML", false, '<br><br>');
+          document.execCommand("insertHTML", false, "<br><br>");
         }
         return false;
       })
@@ -132,6 +132,11 @@ pamApp.directive('pamTextbox', ['$routeParams', '$http', function($routeParams, 
           })
       }
 
+      // Replace \n with <br> in textbox
+      function stripNewLine(str) {
+          str = str.replace(/\n/g, '<br>');
+          return str;
+      }
     }
   }
 }])
