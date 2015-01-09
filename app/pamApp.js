@@ -64,6 +64,33 @@ pamApp.directive('pamImageList', function() {
   };
 })
 
+pamApp.directive('pamData', ["marked", function(marked) {
+  return {
+    restrict: "A",
+    link: function(scope, element, attrs) {
+      scope.$watch(attrs.pamData, function(value) {
+        if (value) {
+          element[0].innerHTML = marked(htmlReplace(value));
+        }
+      })
+
+      function htmlReplace(str) {
+        return String(str)
+            .replace(/&amp;/g, '&')
+            .replace(/&quot;/g, '"')
+            .replace(/&#39;/g, '\'')
+            .replace(/&lt;/g, '<')
+            .replace(/&gt;/g, '>')
+            .replace(/<br><div>|<br>/g, "\n")
+            .replace(/<br\/>/g, '')
+            .replace(/&nbsp;/g, ' ')
+            .replace(/<div><\/div>|<div>/g, "\n")
+            .replace(/<\/div>/g, '');
+      };
+    }
+  }
+}])
+
 pamApp.directive('pamTextbox', ['$routeParams', '$http', function($routeParams, $http) {
   return {
     restrict: 'A',
@@ -101,15 +128,6 @@ pamApp.directive('pamTextbox', ['$routeParams', '$http', function($routeParams, 
             window.setTimeout(imgPost, 0, true);
         }
       });
-
-      element.on('keydown', function(e) {
-        // remove <div> insertion in Chrmoe
-        if (!!window.chrome && e.keyCode === 13 ) {
-          e.preventDefault();
-          document.execCommand("insertHTML", false, "<br><br>");
-        }
-        return false;
-      })
 
       function imgPost() {
         var html = element[0].innerHTML;

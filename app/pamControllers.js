@@ -140,7 +140,7 @@ pamApp.controller('NewCtrl', function($scope, $http, $location) {
     }
 });
 
-pamApp.controller('NoteCtrl', function($scope, $http, $routeParams, $location, marked) {
+pamApp.controller('NoteCtrl', function($scope, $http, $routeParams, $location) {
     getResult()
     $scope.edit = function() {
         $location.path('/notes/' + $routeParams.id + '/edit');
@@ -159,16 +159,14 @@ pamApp.controller('NoteCtrl', function($scope, $http, $routeParams, $location, m
     function getResult() {
         $http.get('/notes/' + $routeParams.id).
         success(function(data) {
-            data.content = marked(htmlDecode(data.content));
             $scope.results = data
-        }).
-        error(function() {
+        }).error(function() {
             $scope.alert = "Welp, something wen't wrong!";
         });
     }
 });
 
-pamApp.controller('SearchCtrl', function($scope, $http, $location, marked) {
+pamApp.controller('SearchCtrl', function($scope, $http, $location) {
     var shown = 0;
     var subjects = [];
     $scope.moreResults = $scope.count > shown;
@@ -193,9 +191,6 @@ pamApp.controller('SearchCtrl', function($scope, $http, $location, marked) {
                 return $scope.alert = "No results found, how about you add one!";
             }
             $scope.count = data.count;
-            data.results.forEach( function(r) {
-                r.content = imgEncode(marked(htmlDecode(r.content)));
-            });
             $scope.results = data.results;
             shown += 10;
             $scope.moreResults = data.count > shown;
@@ -219,9 +214,6 @@ pamApp.controller('SearchCtrl', function($scope, $http, $location, marked) {
         var term = encodeURIComponent($scope.searchTerm);
         $http.get('/search?q=' + term + '&s=' + shown).
         success(function(data) {
-            data.results.forEach( function(r){
-                r.content = imgEncode(marked(htmlDecode(r.content)));
-            });
             Array.prototype.push.apply($scope.results, data.results);
             shown += 10;
             $scope.moreResults = data.count > shown;
