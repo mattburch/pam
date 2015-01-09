@@ -8,6 +8,7 @@ import (
 	"labix.org/v2/mgo/bson"
 	"log"
 	"net/http"
+	"sort"
 )
 
 func postIMG(i Image, p martini.Params, r render.Render, db *mgo.Database) {
@@ -192,7 +193,7 @@ func getSubList(r render.Render, db *mgo.Database) {
 			return
 		}
 	}
-
+	sort.Strings(data)
 	r.JSON(200, data)
 }
 
