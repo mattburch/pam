@@ -1,4 +1,4 @@
-var pamApp = angular.module('pamApp', ['ngRoute', 'ngSanitize', 'hc.marked']);
+var pamApp = angular.module('pamApp', ['ngRoute', 'hc.marked']);
 
 pamApp.config(function($routeProvider) {
     $routeProvider.when('/', {
