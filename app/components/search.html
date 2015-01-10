@@ -1,4 +1,4 @@
-<ng-include src="'shared/nav/nav.html'"></ng-include>
+<ng-include src="'shared/nav/navtop.html'"></ng-include>
 <div class="row">
     <div class="col-xs-6 col-xs-offset-3">
         <form ng-submit="search()">
@@ -9,16 +9,7 @@
 </div>
 <div class="row">
     <div class="col-xs-2">
-        <div class="row">
-            <div class="col-xs-2 subject-header">
-                <div><h3>Subjects</h3></div>
-            </div>
-        </div>
-        <form>
-            <div ng-repeat="sub in subList" class="col-xs-2 subject-list">
-                <pam-subject-list-check></pam-subject-list-check>
-            </div>
-        </form>
+        <pam-subject-list-check></pam-subject-list-check>
     </div>
     <div class="row" ng-show="alert">
         <div class="col-xs-6">

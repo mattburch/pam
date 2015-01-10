@@ -64,6 +64,14 @@ pamApp.directive('pamImageList', function() {
   };
 })
 
+pamApp.directive('pamNoteList', function() {
+  return {
+    restrict: 'E',
+    transclude: true,
+    templateUrl: 'shared/note/notelist.html'
+  };
+})
+
 pamApp.directive('pamData', ["marked", function(marked) {
   return {
     restrict: "A",

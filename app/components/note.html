@@ -1,6 +1,8 @@
-<ng-include src="'shared/nav/nav.html'"></ng-include>
+<ng-include src="'shared/nav/navtop.html'"></ng-include>
 <div class="row" ng-app="">
-    <div class="col-xs-2"></div>
+    <div class="col-xs-2">
+        <pam-note-list></pam-note-list>
+    </div>
     <div class="col-xs-6 col-xs-offset-1">
         <div class="result">
             <u><h1>{{results.title}}</h1></u>
@@ -8,18 +10,16 @@
         </div>
     </div>
 </div>
-<br />
+<br>
 <div clas="row">
-    <div class="col-xs-6 col-xs-offset-3">
-        <span class="pull-right delete-button" ng-click="delete()"><i class="fa fa-eraser fa-2x"></i>
-        </span>
-        <span class="pull-right edit-button" ng-click="edit()"><i class="fa fa-pencil-square-o fa-2x"></i>
-        </span>
-
-    </div>
+    <div class="col-xs-6 col-xs-offset-3"></div>
 </div>
 <div class="row" ng-show="alert">
-    <div class="col-xs-12" class="center-me">
-        <span class="red-alert">{{alert}}</span>
+    <div class="col-xs-6 col-xs-offset-3">
+        <span class="red-alert center-me">{{alert}}</span>
     </div>
 </div>
+<div class="row">
+    <div class="col-xs-12" style="height: 10%"></div>
+</div>
+<ng-include src="'shared/nav/navbottom.html'"></ng-include>

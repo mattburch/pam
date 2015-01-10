@@ -152,6 +152,33 @@ func updateNote(n Note, p martini.Params, req *http.Request, log *log.Logger, r 
 	r.JSON(200, n)
 }
 
+func getNotesBySubject(req *http.Request, r render.Render, db *mgo.Database, log *log.Logger) {
+	var list []Note
+	qs := req.URL.Query()
+	sub := qs.Get("sub")
+
+	if sub == "" {
+		r.JSON(400, map[string]interface{}{"error": "query required"})
+		return
+	}
+
+	err := db.C("notes").Find(
+		bson.M{"subject": sub},
+	).Select(bson.M{"_id": 1, "title": 1}).All(&list)
+	if err != nil {
+		switch err.Error() {
+		case "not found":
+			r.JSON(404, nil)
+			return
+		default:
+			r.JSON(500, nil)
+			return
+		}
+	}
+
+	r.JSON(200, list)
+}
+
 func getNote(p martini.Params, r render.Render, db *mgo.Database) {
 	id := p["id"]
 	if !bson.IsObjectIdHex(id) {

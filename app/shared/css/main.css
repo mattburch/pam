@@ -11,14 +11,16 @@ body .container {
 .pam-navbar {
     margin-left: 0;
 }
-.navbar-default {
+.navbar-top {
+    background-color: #3498db;
+    color: #ffffff;
+}
+.nav > li > a:hover, .nav > li > a:focus {
     background-color: #3498db;
 }
-.navbar-default {
-    color: #ffffff;
-}
-.navbar-default .navbar-brand, .navbar-default .navbar-nav > li > a {
-    color: #ffffff;
+.navbar-bottom {
+    background-color: #fff;
+    border-style: none;
 }
 .hide-submit {
     position: absolute;

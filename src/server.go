@@ -114,6 +114,7 @@ func App() *martini.ClassicMartini {
 		r.Post("/:id", binding.Bind(Image{}), postIMG)
 		r.Post("/(.*)", noteNotFound)
 		r.Get("/sublist", getSubList)
+		r.Get("/subject", getNotesBySubject)
 		r.Get("/:id/img", getIMGList)
 		r.Get("/:id/:imgid", getIMG)
 		r.Get("/:id", getNote)
@@ -148,7 +149,7 @@ func DB() martini.Handler {
 }
 
 func main() {
-	arguments, err := docopt.Parse(usage, nil, true, "pam 2.0.2", false)
+	arguments, err := docopt.Parse(usage, nil, true, "pam 2.0.4", false)
 	if err != nil {
 		log.Fatal("Error parsing usage. Error: ", err.Error())
 	}

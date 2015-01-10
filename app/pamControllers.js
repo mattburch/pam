@@ -110,8 +110,7 @@ pamApp.controller('NewCtrl', function($scope, $http, $location) {
         success(function(data) {
             data = data.replace(/"/g, '')
             $location.path('/notes/' + data);
-        }).
-        error(function() {
+        }).error(function() {
             setAlert("Welp, something wen't wrong!");
         });
     };
@@ -142,6 +141,7 @@ pamApp.controller('NewCtrl', function($scope, $http, $location) {
 
 pamApp.controller('NoteCtrl', function($scope, $http, $routeParams, $location) {
     getResult()
+
     $scope.edit = function() {
         $location.path('/notes/' + $routeParams.id + '/edit');
     };
@@ -150,8 +150,7 @@ pamApp.controller('NoteCtrl', function($scope, $http, $routeParams, $location) {
         $http.delete('/notes/' + $routeParams.id).
         success(function() {
             $location.path('/');
-        }).
-        error(function() {
+        }).error(function() {
             $scope.alert = "Welp, something wen't wrong!";
         });
     };
@@ -164,6 +163,18 @@ pamApp.controller('NoteCtrl', function($scope, $http, $routeParams, $location) {
             $scope.alert = "Welp, something wen't wrong!";
         });
     }
+
+    $scope.$watch('results', function(newVal, oldVal) {
+        if (newVal) {
+            $http.get('/notes/subject?sub=' + newVal.subject).
+            success(function(data) {
+                $scope.noteList = data;
+            }).error(function() {
+                $scope.alert = "Server error I guess :/";
+            });
+        }
+    })
+
 });
 
 pamApp.controller('SearchCtrl', function($scope, $http, $location) {
@@ -195,8 +206,7 @@ pamApp.controller('SearchCtrl', function($scope, $http, $location) {
             shown += 10;
             $scope.moreResults = data.count > shown;
             subjects = [];
-        }).
-        error(function() {
+        }).error(function() {
             $scope.alert = "Server error I guess :/";
             subjects = [];
         });
@@ -204,12 +214,21 @@ pamApp.controller('SearchCtrl', function($scope, $http, $location) {
     $scope.delete = function(id) {
         $http.delete('/notes/' + id).
         success(function() {
-            $location.path('/somewhere');
-        }).
-        error(function() {
+            $scope.results = $scope.results.filter( function(r) {
+                return r.id !== id;
+            })
+            $scope.count --;
+        }).error(function() {
             $scope.alert = "Welp, something wen't wrong!";
         });
     };
+
+    $scope.$watch('count', function(newVal, oldVal) {
+        if (newVal == 0) {
+            $location.path('/#')
+        }
+    })
+
     $scope.more = function() {
         var term = encodeURIComponent($scope.searchTerm);
         $http.get('/search?q=' + term + '&s=' + shown).
@@ -217,8 +236,7 @@ pamApp.controller('SearchCtrl', function($scope, $http, $location) {
             Array.prototype.push.apply($scope.results, data.results);
             shown += 10;
             $scope.moreResults = data.count > shown;
-        }).
-        error(function() {
+        }).error(function() {
             $scope.alert = "Server error I guess :/";
         });
     }
