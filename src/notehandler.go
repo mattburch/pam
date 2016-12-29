@@ -2,17 +2,22 @@ package main
 
 import (
 	"encoding/base64"
+	"log"
+	"net/http"
+	"sort"
+	"strings"
+
 	"github.com/go-martini/martini"
 	"github.com/martini-contrib/render"
 	"labix.org/v2/mgo"
 	"labix.org/v2/mgo/bson"
-	"log"
-	"net/http"
-	"sort"
 )
 
-func postIMG(i Image, p martini.Params, r render.Render, db *mgo.Database) {
-	n := &Note{}
+// Constant for Not Found item
+const nfound = "not found"
+
+func postIMG(i image, p martini.Params, r render.Render, db *mgo.Database) {
+	n := &note{}
 	id := p["id"]
 	i.ID = bson.NewObjectId()
 
@@ -26,7 +31,7 @@ func postIMG(i Image, p martini.Params, r render.Render, db *mgo.Database) {
 	).One(&n)
 	if err != nil {
 		switch err.Error() {
-		case "not found":
+		case nfound:
 			r.JSON(404, nil)
 			return
 		default:
@@ -47,7 +52,7 @@ func postIMG(i Image, p martini.Params, r render.Render, db *mgo.Database) {
 	})
 	if err != nil {
 		switch err.Error() {
-		case "not found":
+		case nfound:
 			r.JSON(404, nil)
 			return
 		default:
@@ -60,19 +65,19 @@ func postIMG(i Image, p martini.Params, r render.Render, db *mgo.Database) {
 
 func getIMG(p martini.Params, r render.Render, log *log.Logger, db *mgo.Database) {
 	id := p["id"]
-	imgid := p["imgid"]
+	imgid := strings.Replace(p["imgid"], ".png", "", 1)
 
 	if !bson.IsObjectIdHex(id) || !bson.IsObjectIdHex(imgid) {
 		r.JSON(400, map[string]interface{}{"error": "not a valid id"})
 		return
 	}
-	n := &Note{}
+	n := &note{}
 	err := db.C("notes").Find(
 		bson.M{"_id": bson.ObjectIdHex(id)},
 	).One(&n)
 	if err != nil {
 		switch err.Error() {
-		case "not found":
+		case nfound:
 			r.JSON(404, nil)
 			return
 		default:
@@ -95,13 +100,13 @@ func getIMGList(p martini.Params, r render.Render, db *mgo.Database) {
 		r.JSON(400, map[string]interface{}{"error": "not a valid id"})
 		return
 	}
-	n := &Note{}
+	n := &note{}
 	err := db.C("notes").Find(
 		bson.M{"_id": bson.ObjectIdHex(id)},
 	).One(&n)
 	if err != nil {
 		switch err.Error() {
-		case "not found":
+		case nfound:
 			r.JSON(404, nil)
 			return
 		default:
@@ -113,7 +118,7 @@ func getIMGList(p martini.Params, r render.Render, db *mgo.Database) {
 	r.JSON(200, n.getIMGlist())
 }
 
-func addNote(n Note, r render.Render, db *mgo.Database) {
+func addNote(n note, r render.Render, db *mgo.Database) {
 	n.ID = bson.NewObjectId()
 	err := db.C("notes").Insert(n)
 	if err != nil {
@@ -123,7 +128,7 @@ func addNote(n Note, r render.Render, db *mgo.Database) {
 	r.JSON(200, n.ID)
 }
 
-func updateNote(n Note, p martini.Params, req *http.Request, log *log.Logger, r render.Render, db *mgo.Database) {
+func updateNote(n note, p martini.Params, req *http.Request, log *log.Logger, r render.Render, db *mgo.Database) {
 	id := p["id"]
 
 	if !bson.IsObjectIdHex(id) {
@@ -140,7 +145,7 @@ func updateNote(n Note, p martini.Params, req *http.Request, log *log.Logger, r 
 	})
 	if err != nil {
 		switch err.Error() {
-		case "not found":
+		case nfound:
 			r.JSON(404, nil)
 			return
 		default:
@@ -152,22 +157,44 @@ func updateNote(n Note, p martini.Params, req *http.Request, log *log.Logger, r 
 	r.JSON(200, n)
 }
 
-func getNotesBySubject(req *http.Request, r render.Render, db *mgo.Database, log *log.Logger) {
-	var list []Note
-	qs := req.URL.Query()
-	sub := qs.Get("sub")
+func getNotesBySubject(s subject, r render.Render, db *mgo.Database, log *log.Logger) {
+	var list []subject
 
-	if sub == "" {
+	if s.Subject == "" {
 		r.JSON(400, map[string]interface{}{"error": "query required"})
 		return
 	}
 
 	err := db.C("notes").Find(
-		bson.M{"subject": sub},
-	).Select(bson.M{"_id": 1, "title": 1}).All(&list)
+		bson.M{"subject": s.Subject}).All(&list)
 	if err != nil {
 		switch err.Error() {
-		case "not found":
+		case nfound:
+			r.JSON(404, nil)
+			return
+		default:
+			r.JSON(500, nil)
+			return
+		}
+	}
+
+	r.JSON(200, list)
+}
+
+func getNotesByTitlelist(p martini.Params, r render.Render, db *mgo.Database) {
+	var list []titlelist
+	sub := p["sub"]
+
+	if sub == "" {
+		r.JSON(400, map[string]interface{}{"error": "Null Title"})
+		return
+	}
+
+	err := db.C("notes").Find(
+		bson.M{"subject": sub}).All(&list)
+	if err != nil {
+		switch err.Error() {
+		case nfound:
 			r.JSON(404, nil)
 			return
 		default:
@@ -185,7 +212,7 @@ func getNote(p martini.Params, r render.Render, db *mgo.Database) {
 		r.JSON(400, map[string]interface{}{"error": "not a valid id"})
 		return
 	}
-	n := &Note{}
+	n := &note{}
 	err := db.C("notes").Find(
 		bson.M{"_id": bson.ObjectIdHex(id)},
 	).One(&n)
@@ -212,7 +239,7 @@ func getSubList(r render.Render, db *mgo.Database) {
 	}).Distinct("subject", &data)
 	if err != nil {
 		switch err.Error() {
-		case "not found":
+		case nfound:
 			r.JSON(404, nil)
 			return
 		default:
@@ -265,7 +292,7 @@ func deleteIMG(p martini.Params, r render.Render, db *mgo.Database) {
 	})
 	if err != nil {
 		switch err.Error() {
-		case "not found":
+		case nfound:
 			r.JSON(404, nil)
 			return
 		default:

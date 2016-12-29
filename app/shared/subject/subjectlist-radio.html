@@ -1,17 +1,21 @@
 <div class="row">
-    <div class="col-xs-2 subject-header">
+    <div class="subject-header">
         <div><h3>Subjects</h3></div>
     </div>
 </div>
-<form>
-    <div ng-repeat="sub in subList" class="col-xs-2 subject-list">
-        <input type="radio" name="radiolist" id="{{sub}}" value="{{sub}}" ng-model="button.radio" ng-checked="checkSubject(sub)"/>
-        <label for="{{sub}}">
-            <div class="fa-stack">
-                <i class="fa fa-square-o fa-stack-lg"></i>
-                <i class="fa fa-check fa-stack-lg"></i>
-            </div>
-            {{sub}}
-        </label>
-    </div>
-</form>
+<div class="row">
+  <div class="list">
+    <form>
+        <div ng-repeat="sub in subList | orderBy: 'toString()'" class="col-xs-2 subject-list">
+            <input type="radio" name="radiolist" id="{{sub}}" value="{{sub}}" ng-model="button.radio" ng-checked="checkSubject(sub)"/>
+            <label for="{{sub}}">
+                <div class="fa-stack">
+                    <i class="fa fa-square-o fa-stack-lg"></i>
+                    <i class="fa fa-check fa-stack-lg"></i>
+                </div>
+                {{sub}}
+            </label>
+        </div>
+    </form>
+  </div>
+</div>

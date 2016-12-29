@@ -1,10 +1,14 @@
 <div class="row">
-    <div class="col-xs-2 subject-header">
+    <div class="subject-header">
         <div><h3>{{results.subject}}</h3></div>
     </div>
 </div>
-<form>
-    <div ng-repeat="n in noteList" class="col-xs-2 subject-list">
-        <a href="#/notes/{{n.id}}">{{n.title}}</a>
-    </div>
-</form>
+<div class="row">
+  <div class="list">
+    <form>
+      <div ng-repeat="n in noteList | orderBy: 'n.title'" class="subject-list">
+          <a href="#!/notes/{{n.id}}">{{n.title}}</a>
+      </div>
+    </form>
+  </div>
+</div>

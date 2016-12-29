@@ -1,34 +1,27 @@
 <ng-include src="'shared/nav/navtop.html'"></ng-include>
 <div class="row">
-    <div class="col-xs-2">
-        <div class="row">
-            <div class="col-xs-2" style="height: 15%"></div>
-        </div>
-        <div class="row">
-            <pam-subject-list-radio></pam-subject-list-radio>
-        </div>
-    </div>
-    <div class="col-xs-6 col-xs-offset-1">
-        <form id="post-content" class="form-horizontal" role="form" ng-submit="save()">
-            <div class="form-group">
-                <input id="subject" type="text" class="form-control" ng-model="subject">
-                <input type="text" class="form-control" ng-model="title">
-            </div>
-            <div id="textbox" pam-textbox contenteditable="true" class="form-control textbox"></div>
-            <br>
-            <button type="submit" class="btn btn-default ">Save</button>
-        </form>
-        <br>
-        <div class="center-me">
-            <span class="red-alert">{{alert}}</span>
-        </div>
-    </div>
-    <div class="col-xs-1" style="width: 2%"></div>
-    <div class="col-xs-2">
-       <div ng-repeat="img in imgList" ng-init="check=[]" ng-mouseenter="check[$index]=true" ng-mouseleave="check[$index]=false;">
-            <pam-Image-List></pam-Image-List>
-        </div>
-    </div>
+  <div class="col-xs-2">
+    <pam-subject-list-radio></pam-subject-list-radio>
+  </div>
+  <div class="col-xs-6 col-xs-offset-1">
+      <form id="post-content" class="form-horizontal" role="form" ng-submit="save()">
+          <div class="form-group">
+              <input id="subject" type="text" class="form-control" ng-model="subject">
+              <input type="text" class="form-control" ng-model="title">
+          </div>
+          <!-- <div ng-controller="pamNoteEdit"> -->
+            <div ng-bind-html id="textbox" pam-textbox contenteditable="true" class="form-control textbox"></div>
+          <!-- </div> -->
+          <br>
+          <button type="submit" class="btn btn-default ">Save</button>
+      </form>
+      <br>
+      <div class="center-me">
+          <span class="red-alert">{{alert}}</span>
+      </div>
+  </div>
+  <div class="col-xs-1" style="width: 2%"></div>
+  <div class="col-xs-2">
+      <pam-Image-List></pam-Image-List>
+  </div>
 </div>
-
-

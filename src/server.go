@@ -1,35 +1,49 @@
 package main
 
 import (
+	"log"
+	"os"
+
 	"github.com/docopt/docopt.go"
 	"github.com/go-martini/martini"
 	"github.com/martini-contrib/binding"
 	"github.com/martini-contrib/render"
 	"labix.org/v2/mgo"
 	"labix.org/v2/mgo/bson"
-	"log"
-	"net/http"
-	"os"
-	"strconv"
-	"strings"
 )
 
 // Note contains a title and content.
-type Note struct {
+type note struct {
 	ID      bson.ObjectId `json:"id" bson:"_id"`
 	Subject string        `json:"subject" bson:"subject" binding:"required"`
 	Title   string        `json:"title" bson:"title" binding:"required"`
-	Content string        `json:"content" bson:"content" binding:"required"`
-	Image   []Image       `json:"img" bson:"img"`
+	Content string        `json:"content" bson:"content"`
+	Image   []image       `json:"img" bson:"img"`
 }
 
-type Image struct {
+type image struct {
 	ID      bson.ObjectId `json:"imgid" bson:"img_id"`
-	Type    string        `json:"imgType" bson:"img_type binding:"required"`
+	Type    string        `json:"imgType" bson:"img_type" binding:"required"`
 	Content string        `json:"imgContent" bson:"img_content" binding:"required"`
 }
 
-func (n *Note) getImage(id string) string {
+type subject struct {
+	Subject string `json:"subject" bson:"subject"`
+}
+
+type query struct {
+	Query   string   `json:"query" bson:"query"`
+	Subject []string `json:"subject" bson:"subject"`
+	Show    int      `json:"show" bson:"show"`
+}
+
+// Return object for title query
+type titlelist struct {
+	ID    bson.ObjectId `json:"id" bson:"_id"`
+	Title string        `json:"title" bson:"title"`
+}
+
+func (n *note) getImage(id string) string {
 	for _, img := range n.Image {
 		if bson.ObjectIdHex(id) == img.ID {
 			return img.Content
@@ -38,7 +52,7 @@ func (n *Note) getImage(id string) string {
 	return ""
 }
 
-func (n *Note) getIMGlist() []string {
+func (n *note) getIMGlist() []string {
 	list := []string{}
 	for _, img := range n.Image {
 		list = append(list, img.ID.Hex())
@@ -53,26 +67,20 @@ func App() *martini.ClassicMartini {
 	m.Use(render.Renderer())
 	m.Use(martini.Static("app"))
 
-	m.Get("/search", func(req *http.Request, r render.Render, log *log.Logger, db *mgo.Database) {
-		qs := req.URL.Query()
-		q, s, sub := qs.Get("q"), qs.Get("s"), qs.Get("sub")
-		if q == "" {
+	m.Post("/search", binding.Bind(query{}), func(q query, r render.Render, log *log.Logger, db *mgo.Database) {
+		if q.Query == "" {
 			r.JSON(400, map[string]interface{}{"error": "query required"})
 			return
 		}
-		n := []Note{}
-		if sub != "" {
-			sublist := []string{}
-			for _, s := range strings.Split(sub, ",") {
-				sublist = append(sublist, s)
-			}
+		n := []note{}
+		if len(q.Subject) > 0 {
 
 			search := bson.M{
 				"$and": []bson.M{
-					bson.M{"subject": bson.M{"$in": sublist}},
+					bson.M{"subject": bson.M{"$in": q.Subject}},
 					bson.M{"$or": []bson.M{
-						bson.M{"title": bson.M{"$regex": q, "$options": "i"}},
-						bson.M{"content": bson.M{"$regex": q, "$options": "i"}},
+						bson.M{"title": bson.M{"$regex": q.Query, "$options": "i"}},
+						bson.M{"content": bson.M{"$regex": q.Query, "$options": "i"}},
 					}},
 				},
 			}
@@ -82,8 +90,8 @@ func App() *martini.ClassicMartini {
 			}
 		} else {
 			search := []bson.M{
-				bson.M{"title": bson.M{"$regex": q, "$options": "i"}},
-				bson.M{"content": bson.M{"$regex": q, "$options": "i"}},
+				bson.M{"title": bson.M{"$regex": q.Query, "$options": "i"}},
+				bson.M{"content": bson.M{"$regex": q.Query, "$options": "i"}},
 			}
 			err := db.C("notes").Find(bson.M{"$or": search}).All(&n)
 			if err != nil {
@@ -94,13 +102,7 @@ func App() *martini.ClassicMartini {
 		total := len(n)
 		beg := 0
 		end := 10
-		var err error
-		if s != "" {
-			beg, err = strconv.Atoi(s)
-			if err != nil {
-				r.JSON(400, map[string]interface{}{"error": "s must be an int"})
-				return
-			}
+		if q.Show > 0 {
 			end += 10
 		}
 		if end > total {
@@ -110,16 +112,17 @@ func App() *martini.ClassicMartini {
 	})
 
 	m.Group("/notes", func(r martini.Router) {
-		r.Post("", binding.Bind(Note{}), addNote)
-		r.Post("/:id", binding.Bind(Image{}), postIMG)
+		r.Post("", binding.Bind(note{}), addNote)
+		r.Post("/subject", binding.Bind(subject{}), getNotesBySubject)
+		r.Post("/:id", binding.Bind(image{}), postIMG)
 		r.Post("/(.*)", noteNotFound)
+		r.Get("/subject/:sub", getNotesByTitlelist)
 		r.Get("/sublist", getSubList)
-		r.Get("/subject", getNotesBySubject)
 		r.Get("/:id/img", getIMGList)
 		r.Get("/:id/:imgid", getIMG)
 		r.Get("/:id", getNote)
 		r.Get("(.*)", noteNotFound)
-		r.Put("/:id", binding.Bind(Note{}), updateNote)
+		r.Put("/:id", binding.Bind(note{}), updateNote)
 		r.Put("(.*)", noteNotFound)
 		r.Delete("/:id", deleteNote)
 		r.Delete("/:id/:imgid", deleteIMG)
@@ -149,7 +152,7 @@ func DB() martini.Handler {
 }
 
 func main() {
-	arguments, err := docopt.Parse(usage, nil, true, "pam 2.0.4", false)
+	arguments, err := docopt.Parse(usage, nil, true, "pam 2.1.0", false)
 	if err != nil {
 		log.Fatal("Error parsing usage. Error: ", err.Error())
 	}

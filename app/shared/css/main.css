@@ -79,16 +79,23 @@ body .container {
 }
 .subject-header {
     display: list-item;
-    display: break-word;
+    /*display: break-word;*/
     list-style: none;
-    text-align: center;
     margin-left: 15px;
-    width: 100%;
+    width: 25%;
+    position: fixed;
     overflow: hidden;
+    padding-left: 50px;
+}
+.list {
+  position: fixed;
+  padding-top: 60px;
+  padding-left: 20px;
+  width: 25%;
+  z-index: 1;
 }
 .subject-list {
     display: list-item;
-    display: break-word;
     list-style: none;
     margin-left: 15px;
     width: 100%;
@@ -160,7 +167,7 @@ body .container {
     height: 300px;
     overflow-x: hidden;
     overflow-y: auto;
-    cursor: test;
+    /*cursor: test;*/
     word-wrap: break-word;
     resize: both;
 }
