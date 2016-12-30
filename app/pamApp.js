@@ -44,7 +44,7 @@ pamApp.config( function(markedProvider) {
     });
     markedProvider.setRenderer({
       link: function(href, title, text) {
-        if (text.includes("<img") && text.includes("/notes/")) {
+        if (text.includes("<img") && text.includes("/img/")) {
           img = href.split("/");
           return text.slice(0, 5) + "ng-click=\"openLightboxModal('" + img[img.length - 1]  + "')\" " + text.slice(5)
         } else {
@@ -81,7 +81,8 @@ pamApp.directive('pamSubjectListCheck', function() {
 pamApp.directive('pamImageList', function() {
   return {
     restrict: 'E',
-    transclude: true,
+    controller: "pamIMG",
+    controllerAs: "pamimg",
     scope: true,
     templateUrl: 'shared/image/imagelist.html',
   };
@@ -90,7 +91,6 @@ pamApp.directive('pamImageList', function() {
 pamApp.directive('pamNoteList', function() {
   return {
     restrict: 'E',
-    transclude: true,
     templateUrl: 'shared/note/notelist.html'
   };
 });
@@ -105,14 +105,15 @@ pamApp.directive('pamData', function($compile, marked) {
     },
     link: function(scope, element, attrs) {
       scope.$watch('note', function(value) {
-        if(value) {
-          if (value == " ") {
-            return
-          }
+        if(value && value != " ") {
           template = marked(htmlReplace(value));
-          link = $compile(template)
-          content = link(scope)
-          element.append(content)
+          if (template != '') {
+            link = $compile(template);
+            content = link(scope);
+            element.append(content);
+          }
+        } else {
+          return;
         };
       });
 
@@ -136,66 +137,65 @@ pamApp.directive('pamData', function($compile, marked) {
 pamApp.directive('pamTextbox', ['$routeParams', '$http', function($routeParams, $http) {
   return {
     restrict: 'A',
+    controller: "pamIMG",
+    controllerAs: "img",
+    scope: true,
     link: function(scope, element, attrs) {
 
       element.on('paste', function(e) {
         var items = (e.clipboardData || e.originalEvent.clipboardData).items;
         var textbox = element[0];
         if (items && items[0].type == "text/plain") {
-            e.preventDefault();
-            document.execCommand("insertHTML", false, stripNewLine(e.clipboardData.getData('text')));
+          e.preventDefault();
+          document.execCommand("insertHTML", false, stripNewLine(e.clipboardData.getData('text')));
         } else if (items) {
-            var blob = items[0].getAsFile();
-            var reader = new FileReader();
-            reader.onload = function(event) {
-                var imgurl = event.target.result;
-                $http.post('/notes/' + $routeParams.id, {
-                    "imgType": imgurl.match(/data:(.*?);/)[1],
-                    "imgContent": imgurl.match(/base64,(.*)/)[1]
-                }).then ( function successCallback(obj) {
-                    // Replace image tag with handlebars ID of the POST image
-                    // document.execCommand("insertHTML", false, getIMGlink(obj));
-                    element[0].innerHTML = element[0].innerHTML.replace(/<img .*?alt="">/, getIMGlink(obj));
-                    getIMGid();
-                  }, function errorCallback() {handleError});
-                };
-            reader.readAsDataURL(blob);
+          var blob = items[0].getAsFile();
+          var reader = new FileReader();
+          reader.onload = function(event) {
+            var imgurl = event.target.result;
+            postIMG(imgurl);
+          };
+          reader.readAsDataURL(blob);
         } else if (e.clipboardData.getData('text')) {
-            // paste text clipboard data and strip style editing
-            e.preventDefault();
-            document.execCommand("insertHTML", false, stripNewLine(e.clipboardData.getData('text')));
+          // paste text clipboard data and strip style editing
+          e.preventDefault();
+          document.execCommand("insertHTML", false, stripNewLine(e.clipboardData.getData('text')));
         } else {
-            // else wait on window for paste event and POST contents
-            window.setTimeout(imgPost, 0, true);
+          // else wait on window for paste event and POST contents
+          window.setTimeout(imgPost, 0, true);
         };
       });
 
       // Post Image Content
       function imgPost() {
         var html = element[0].innerHTML;
-        // extract image type and base64 content and post to DB
-        $http.post('/notes/' + $routeParams.id, {
-            "imgType": html.match(/data:(.*?);/)[1],
-            "imgContent": html.match(/base64,(.*?)"/)[1]
-        }).then ( function successCallbak(obj) {
-            // Replace image tag with handlebars ID of the POST image
-            element[0].innerHTML = element[0].innerHTML.replace(/<img .*?alt="">/, getIMGlink(obj));
-            getIMGid();
-        });
+        postIMG(html);
       };
 
+      // extract image type and base64 content and post to DB
+      function postIMG(content) {
+        $http.post('/img/' + $routeParams.id, {
+            "Type": content.match(/data:(.*?);/)[1],
+            "Content": content.match(/base64,(.*)/)[1]
+        }).then ( function successCallback(obj) {
+            // Replace image tag with handlebars ID of the POST image
+            element[0].innerHTML = element[0].innerHTML.replace(/<img .*?alt="">/, getIMGlink(obj));
+            getIMGList();
+          }, function errorCallback() {handleError});
+      }
+
       // Pulls IMG ID value
-      function getIMGid() {
-          $http.get('/notes/' + $routeParams.id + '/img').
+      function getIMGList() {
+          $http.get('/img/' + $routeParams.id + '/list').
           then (function successCallback(obj) {
               scope.imgList = obj.data;
-          });
+          }, function errorCallback() {handelError});
       };
 
       // Format IMG link
       function getIMGlink(obj) {
         data = obj.data.replace(/"/g, '');
-        return "[![" + data + "](/notes/" + $routeParams.id + "/" + data + ")](/notes/" + $routeParams.id + "/" + data + ")";
+        return "[![" + data + "](/img/" + data + ")](/img/" + data + ")";
       }
 
       // Replace \n with <br> in textbox

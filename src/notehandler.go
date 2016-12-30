@@ -5,7 +5,6 @@ import (
 	"log"
 	"net/http"
 	"sort"
-	"strings"
 
 	"github.com/go-martini/martini"
 	"github.com/martini-contrib/render"
@@ -16,8 +15,8 @@ import (
 // Constant for Not Found item
 const nfound = "not found"
 
-func postIMG(i image, p martini.Params, r render.Render, db *mgo.Database) {
-	n := &note{}
+func addIMG(i image, p martini.Params, r render.Render, db *mgo.Database) {
+	// n := &note{}
 	id := p["id"]
 	i.ID = bson.NewObjectId()
 
@@ -25,56 +24,27 @@ func postIMG(i image, p martini.Params, r render.Render, db *mgo.Database) {
 		r.JSON(400, map[string]interface{}{"error": "not a valid id"})
 		return
 	}
+	i.NoteID = bson.ObjectIdHex(id)
 
-	err := db.C("notes").Find(
-		bson.M{"_id": bson.ObjectIdHex(id)},
-	).One(&n)
+	err := db.C("images").Insert(i)
 	if err != nil {
-		switch err.Error() {
-		case nfound:
-			r.JSON(404, nil)
-			return
-		default:
-			r.JSON(500, nil)
-			return
-		}
-	}
-
-	err = db.C("notes").Update(bson.M{
-		"_id": bson.ObjectIdHex(id)}, bson.M{
-		"$addToSet": bson.M{
-			"img": bson.M{
-				"img_id":      i.ID,
-				"img_type":    i.Type,
-				"img_content": i.Content,
-			},
-		},
-	})
-	if err != nil {
-		switch err.Error() {
-		case nfound:
-			r.JSON(404, nil)
-			return
-		default:
-			r.JSON(500, nil)
-			return
-		}
+		r.JSON(500, nil)
+		return
 	}
 	r.JSON(200, i.ID)
 }
 
 func getIMG(p martini.Params, r render.Render, log *log.Logger, db *mgo.Database) {
 	id := p["id"]
-	imgid := strings.Replace(p["imgid"], ".png", "", 1)
 
-	if !bson.IsObjectIdHex(id) || !bson.IsObjectIdHex(imgid) {
+	if !bson.IsObjectIdHex(id) {
 		r.JSON(400, map[string]interface{}{"error": "not a valid id"})
 		return
 	}
-	n := &note{}
-	err := db.C("notes").Find(
+	img := &image{}
+	err := db.C("images").Find(
 		bson.M{"_id": bson.ObjectIdHex(id)},
-	).One(&n)
+	).One(&img)
 	if err != nil {
 		switch err.Error() {
 		case nfound:
@@ -86,7 +56,7 @@ func getIMG(p martini.Params, r render.Render, log *log.Logger, db *mgo.Database
 		}
 	}
 
-	data, err := base64.StdEncoding.DecodeString(n.getImage(imgid))
+	data, err := base64.StdEncoding.DecodeString(img.Content)
 	if err != nil {
 		r.JSON(404, nil)
 	}
@@ -95,27 +65,27 @@ func getIMG(p martini.Params, r render.Render, log *log.Logger, db *mgo.Database
 
 func getIMGList(p martini.Params, r render.Render, db *mgo.Database) {
 	id := p["id"]
+	var list []imagelist
 
 	if !bson.IsObjectIdHex(id) {
 		r.JSON(400, map[string]interface{}{"error": "not a valid id"})
 		return
 	}
-	n := &note{}
-	err := db.C("notes").Find(
-		bson.M{"_id": bson.ObjectIdHex(id)},
-	).One(&n)
+	err := db.C("images").Find(
+		bson.M{"note_id": bson.ObjectIdHex(id)},
+	).All(&list)
 	if err != nil {
 		switch err.Error() {
 		case nfound:
 			r.JSON(404, nil)
 			return
 		default:
-			r.JSON(500, nil)
+			r.JSON(500, err)
 			return
 		}
 	}
 
-	r.JSON(200, n.getIMGlist())
+	r.JSON(200, list)
 }
 
 func addNote(n note, r render.Render, db *mgo.Database) {
@@ -275,21 +245,16 @@ func deleteNote(p martini.Params, r render.Render, db *mgo.Database) {
 
 func deleteIMG(p martini.Params, r render.Render, db *mgo.Database) {
 	id := p["id"]
-	imgid := p["imgid"]
+	// imgid := p["imgid"]
 
-	if !bson.IsObjectIdHex(id) && !bson.IsObjectIdHex(imgid) {
+	if !bson.IsObjectIdHex(id) && !bson.IsObjectIdHex(id) {
 		r.JSON(400, map[string]interface{}{"error": "not a valid id"})
 		return
 	}
 
-	err := db.C("notes").Update(bson.M{
-		"_id": bson.ObjectIdHex(id)}, bson.M{
-		"$pull": bson.M{
-			"img": bson.M{
-				"img_id": bson.ObjectIdHex(imgid),
-			},
-		},
-	})
+	err := db.C("images").Remove(
+		bson.M{"_id": bson.ObjectIdHex(id)},
+	)
 	if err != nil {
 		switch err.Error() {
 		case nfound:

@@ -1,10 +1,8 @@
-<div ng-controller="pamIMG">
+<div>
   <div ng-repeat="img in imgList" ng-init="check=[]" ng-mouseenter="check[$index]=true" ng-mouseleave="check[$index]=false;">
     <div class="row">
         <div class="image-list col-xs-2">
-            <!-- <a href="/notes/{{id}}/{{img}}"> -->
-                <img ng-click="openLightboxModal($index)" class="img-responsive" src="/notes/{{id}}/{{img}}" alt="{{img}}"/>
-            <!-- </a> -->
+          <img ng-click="openLightboxModal($index)" class="img-responsive" src="/img/{{img.id}}" alt="{{img.id}}"/>
         <div ng-show="check[$index]" ng-click="deleteIMG(img)" class="image-action delete-button"><i class="fa fa-eraser fa-2x" ></i></div>
         </div>
     </div>

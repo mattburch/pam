@@ -28,27 +28,28 @@ pamApp.controller('pamSubList', function($scope, $http) {
 
 pamApp.controller('pamIMG', function($scope, $http, $routeParams, Lightbox) {
   var imgView = [];
-  getIMG();
+  // $scope.imgList = []
+  getIMGList();
 
-  function getIMG() {
-      if ($routeParams.id != null) {
-        $http.get('/notes/' + $routeParams.id + '/img').
-        then ( function successCallback(obj) {
-          $scope.imgList = obj.data;
-          buildView();
-        }, function errorCallback() {handelError});
-      };
+  function getIMGList() {
+    if ($routeParams.id != null) {
+      $http.get('/img/' + $routeParams.id + '/list').
+      then ( function successCallback(obj) {
+        $scope.imgList = obj.data;
+        buildView();
+      }, function errorCallback() {handelError});
+    };
    };
 
-   $scope.deleteIMG = function(imgid) {
-       var re = new RegExp("\\[!\\[" + imgid + "\\]\\(/notes/" + $routeParams.id + "/" + imgid + "\\)\\]\\(/notes/" + $routeParams.id + "/" + imgid + "\\)", "g");
-       var html = document.getElementById("textbox").innerHTML;
-       html = html.replace(re, '');
-       $http.delete('/notes/' + $routeParams.id + "/" + imgid, {}).
-       then ( function successCallback() {
-           document.getElementById("textbox").innerHTML = html.replace(re, '');
-           getIMG();
-       }, function errorCallback() {handelError});
+   $scope.deleteIMG = function(img) {
+     var re = new RegExp("\\[!\\[" + img.id + "\\]\\(/img/" + img.id + "\\)\\]\\(/img/" + img.id + "\\)", "g");
+     var html = document.getElementById("textbox").innerHTML;
+     html = html.replace(re, '');
+     $http.delete('/img/' +  img.id, {}).
+     then ( function successCallback() {
+         document.getElementById("textbox").innerHTML = html.replace(re, '');
+         getIMGList();
+     }, function errorCallback() {handelError});
    };
 
    // Call Modal Lightbox
@@ -71,7 +72,7 @@ pamApp.controller('pamIMG', function($scope, $http, $routeParams, Lightbox) {
      imgView = [];
      $scope.imgList.forEach( function(img) {
        imgView.push({
-         "url": "/notes/" + $routeParams.id + "/" + img
+         "url": "/img/" + img
        });
      });
    };
@@ -80,7 +81,7 @@ pamApp.controller('pamIMG', function($scope, $http, $routeParams, Lightbox) {
 
 pamApp.controller('EditCtrl', function($scope, $http, $routeParams, $location) {
     $scope.id = $routeParams.id;
-    $scope.imgList = [];
+    // $scope.imgList = [];
     getResult();
 
     $scope.save = function() {
