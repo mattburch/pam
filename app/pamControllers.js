@@ -236,6 +236,7 @@ pamApp.controller('SearchCtrl', function($scope, $http, $location) {
             $scope.alert = "Server error I guess :/";
             subjects = [];
         });
+        shown = 0;
     };
 
     $scope.delete = function(id) {
@@ -260,9 +261,10 @@ pamApp.controller('SearchCtrl', function($scope, $http, $location) {
         var term = encodeURIComponent($scope.searchTerm);
         $http.post('/search', {
           "query": term,
-          "show": shown
+          "show": shown,
+          "subject": subjects
         }).then ( function successCallback(obj) {
-            Array.prototype.push.apply($scope.results, obj.data.results);
+            $scope.results = obj.data.results;
             shown += 10;
             $scope.moreResults = obj.data.count > shown;
         }, function errorCallback() {
