@@ -83,7 +83,6 @@ pamApp.directive('pamImageList', function() {
     restrict: 'E',
     controller: "pamIMG",
     controllerAs: "pamimg",
-    scope: true,
     templateUrl: 'shared/image/imagelist.html',
   };
 });
@@ -138,14 +137,16 @@ pamApp.directive('pamTextbox', ['$routeParams', '$http', function($routeParams, 
   return {
     restrict: 'A',
     controller: "pamIMG",
-    controllerAs: "img",
-    scope: true,
     link: function(scope, element, attrs) {
 
       element.on('paste', function(e) {
         var items = (e.clipboardData || e.originalEvent.clipboardData).items;
         var textbox = element[0];
         if (items && items[0].type == "text/plain") {
+          e.preventDefault();
+          document.execCommand("insertHTML", false, stripNewLine(e.clipboardData.getData('text')));
+        } else if (e.clipboardData.getData('text')) {
+          // paste text clipboard data and strip style editing
           e.preventDefault();
           document.execCommand("insertHTML", false, stripNewLine(e.clipboardData.getData('text')));
         } else if (items) {
@@ -156,10 +157,6 @@ pamApp.directive('pamTextbox', ['$routeParams', '$http', function($routeParams, 
             postIMG(imgurl);
           };
           reader.readAsDataURL(blob);
-        } else if (e.clipboardData.getData('text')) {
-          // paste text clipboard data and strip style editing
-          e.preventDefault();
-          document.execCommand("insertHTML", false, stripNewLine(e.clipboardData.getData('text')));
         } else {
           // else wait on window for paste event and POST contents
           window.setTimeout(imgPost, 0, true);
@@ -180,17 +177,9 @@ pamApp.directive('pamTextbox', ['$routeParams', '$http', function($routeParams, 
         }).then ( function successCallback(obj) {
             // Replace image tag with handlebars ID of the POST image
             element[0].innerHTML = element[0].innerHTML.replace(/<img .*?alt="">/, getIMGlink(obj));
-            getIMGList();
+            scope.getList();
           }, function errorCallback() {handleError});
       }
-
-      // Pulls IMG ID value
-      function getIMGList() {
-          $http.get('/img/' + $routeParams.id + '/list').
-          then (function successCallback(obj) {
-              scope.imgList = obj.data;
-          }, function errorCallback() {handelError});
-      };
 
       // Format IMG link
       function getIMGlink(obj) {

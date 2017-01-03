@@ -63,9 +63,9 @@ func getIMG(p martini.Params, r render.Render, log *log.Logger, db *mgo.Database
 	r.Data(200, data)
 }
 
-func getIMGList(p martini.Params, r render.Render, db *mgo.Database) {
+func getIMGList(p martini.Params, r render.Render, db *mgo.Database, log *log.Logger) {
 	id := p["id"]
-	var list []imagelist
+	list := make([]imagelist, 0)
 
 	if !bson.IsObjectIdHex(id) {
 		r.JSON(400, map[string]interface{}{"error": "not a valid id"})

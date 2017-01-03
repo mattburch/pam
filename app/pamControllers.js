@@ -28,7 +28,6 @@ pamApp.controller('pamSubList', function($scope, $http) {
 
 pamApp.controller('pamIMG', function($scope, $http, $routeParams, Lightbox) {
   var imgView = [];
-  // $scope.imgList = []
   getIMGList();
 
   function getIMGList() {
@@ -39,6 +38,10 @@ pamApp.controller('pamIMG', function($scope, $http, $routeParams, Lightbox) {
         buildView();
       }, function errorCallback() {handelError});
     };
+   };
+
+   $scope.getList = function() {
+     getIMGList();
    };
 
    $scope.deleteIMG = function(img) {
@@ -72,7 +75,7 @@ pamApp.controller('pamIMG', function($scope, $http, $routeParams, Lightbox) {
      imgView = [];
      $scope.imgList.forEach( function(img) {
        imgView.push({
-         "url": "/img/" + img
+         "url": "/img/" + img.id
        });
      });
    };
@@ -81,7 +84,6 @@ pamApp.controller('pamIMG', function($scope, $http, $routeParams, Lightbox) {
 
 pamApp.controller('EditCtrl', function($scope, $http, $routeParams, $location) {
     $scope.id = $routeParams.id;
-    // $scope.imgList = [];
     getResult();
 
     $scope.save = function() {
