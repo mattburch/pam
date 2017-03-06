@@ -259,8 +259,7 @@ pamApp.controller('SearchCtrl', function($scope, $http, $location) {
 
     $scope.search = function() {
         $scope.results = null;
-        var term = encodeURIComponent($scope.searchTerm);
-        if (term === 'undefined') {
+        if ($scope.term === 'undefined') {
             return $scope.alert = "Search for something or die for nothing!";
         }
         for (var key in $scope.check) {
@@ -269,7 +268,7 @@ pamApp.controller('SearchCtrl', function($scope, $http, $location) {
             }
         }
         $http.post('/search', {
-          "query": term,
+          "query": $scope.term,
           "subject": subjects
         }).then ( function successCallback(obj) {
             $scope.alert = null;
