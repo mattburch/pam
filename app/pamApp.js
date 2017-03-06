@@ -26,6 +26,10 @@ pamApp.config(function($routeProvider) {
     });
 });
 
+pamApp.config(['$compileProvider', function ($compileProvider) {
+    $compileProvider.aHrefSanitizationWhitelist(/^\s*(|blob|http|):/);
+}]);
+
 pamApp.config( function(markedProvider) {
     markedProvider.setOptions({
       renderer: new marked.Renderer(),
@@ -56,41 +60,41 @@ pamApp.config( function(markedProvider) {
 });
 
 pamApp.config( function(LightboxProvider) {
-  LightboxProvider.templateUrl = 'shared/image/template.html';
+  LightboxProvider.templateUrl = "shared/image/template.html";
   LightboxProvider.fullScreenMode = true;
 });
 
 pamApp.directive('pamSubjectListRadio', function() {
   return {
-    restrict: 'E',
-    controller: 'pamSubList',
-    controllerAs: 'pamSub',
-    templateUrl: 'shared/subject/subjectlist-radio.html',
+    restrict: "E",
+    controller: "pamSubList",
+    controllerAs: "pamSub",
+    templateUrl: "shared/subject/subjectlist-radio.html"
   };
 });
 
 pamApp.directive('pamSubjectListCheck', function() {
   return {
-    restrict: 'E',
-    controller: 'pamSubList',
-    controllerAs: 'pamSub',
-    templateUrl: 'shared/subject/subjectlist-check.html'
+    restrict: "E",
+    controller: "pamSubList",
+    controllerAs: "pamSub",
+    templateUrl: "shared/subject/subjectlist-check.html"
   };
 });
 
 pamApp.directive('pamImageList', function() {
   return {
-    restrict: 'E',
+    restrict: "E",
     controller: "pamIMG",
     controllerAs: "pamimg",
-    templateUrl: 'shared/image/imagelist.html',
+    templateUrl: "shared/image/imagelist.html"
   };
 });
 
 pamApp.directive('pamNoteList', function() {
   return {
-    restrict: 'E',
-    templateUrl: 'shared/note/notelist.html'
+    restrict: "E",
+    templateUrl: "shared/note/notelist.html"
   };
 });
 

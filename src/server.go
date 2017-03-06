@@ -116,6 +116,7 @@ func App() *martini.ClassicMartini {
 		r.Post("/:id", binding.Bind(image{}), addIMG)
 		r.Post("/(.*)", noteNotFound)
 		r.Get("/:id/list", getIMGList)
+		r.Get("/:id/content", getIMGContent)
 		r.Get("/:id", getIMG)
 		r.Get("(.*)", noteNotFound)
 		r.Delete("/:id", deleteIMG)

@@ -63,6 +63,31 @@ func getIMG(p martini.Params, r render.Render, log *log.Logger, db *mgo.Database
 	r.Data(200, data)
 }
 
+func getIMGContent(p martini.Params, r render.Render, log *log.Logger, db *mgo.Database) {
+	id := p["id"]
+
+	if !bson.IsObjectIdHex(id) {
+		r.JSON(400, map[string]interface{}{"error": "not a valid id"})
+		return
+	}
+	img := &image{}
+	err := db.C("images").Find(
+		bson.M{"_id": bson.ObjectIdHex(id)},
+	).One(&img)
+	if err != nil {
+		switch err.Error() {
+		case nfound:
+			r.JSON(404, nil)
+			return
+		default:
+			r.JSON(500, nil)
+			return
+		}
+	}
+
+	r.JSON(200, img.Content)
+}
+
 func getIMGList(p martini.Params, r render.Render, db *mgo.Database, log *log.Logger) {
 	id := p["id"]
 	list := make([]imagelist, 0)

@@ -10,6 +10,9 @@
                 </button>
                 <span class="pull-right delete-button" style="margin-top: 5px" ng-click="delete()"><i class="fa fa-eraser fa-2x"></i></span>
                 <span class="pull-right edit-button" style="margin-top: 5px" ng-click="edit()"><i class="fa fa-pencil-square-o fa-2x"></i></span>
+                <div ng-controller="pamExport">
+                  <a class="pull-right download-button" style="margin-top: 5px; color: #000000" download="{{results.subject}}-{{results.title}}.html" ng-click="download()" ng-href="{{fileUrl}}" target="_blank"><i class="fa fa-download fa-2x"></i></a>
+                </div>
             </div>
         </div>
     </div>

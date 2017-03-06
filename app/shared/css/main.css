@@ -58,6 +58,14 @@ body .container {
     background: rgba(52, 152, 219, 0.5);
     border-radius: 10px;
     padding: 5px;
+    margin-left: 5px;
+}
+.download-button {
+  cursor: pointer;
+  background-color: #FFD700;
+  border-radius: 10px;
+  padding: 5px;
+  margin-left: 5px;
 }
 .red-alert {
     color: #e74c3c;
