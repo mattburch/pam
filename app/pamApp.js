@@ -148,11 +148,12 @@ pamApp.directive('pamTextbox', ['$routeParams', '$http', function($routeParams, 
         var textbox = element[0];
         if (items && items[0].type == "text/plain") {
           e.preventDefault();
-          document.execCommand("insertHTML", false, stripNewLine(e.clipboardData.getData('text')));
+          document.execCommand("insertHTML", false, stripNewLine(e.clipboardData.getData('text/plain')));
         } else if (e.clipboardData.getData('text')) {
+          console.log(encodeURIComponent(stripNewLine(e.clipboardData.getData('text'))))
           // paste text clipboard data and strip style editing
           e.preventDefault();
-          document.execCommand("insertHTML", false, stripNewLine(e.clipboardData.getData('text')));
+          document.execCommand("insertHTML", false, stripNewLine(e.clipboardData.getData('text/plain')));
         } else if (items) {
           var blob = items[0].getAsFile();
           var reader = new FileReader();
@@ -193,6 +194,7 @@ pamApp.directive('pamTextbox', ['$routeParams', '$http', function($routeParams, 
 
       // Replace \n with <br> in textbox
       function stripNewLine(str) {
+          str = str.replace(/^[\n\s]+/, '');
           str = str.replace(/\n/g, '<br>');
           return str;
       };
