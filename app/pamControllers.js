@@ -94,15 +94,15 @@ pamApp.controller('pamExport', function($scope, $window, $http) {
     then ( function successCallback(obj) {
       $scope.template = obj.data;
     });
-  }
+  };
 
   $scope.$watch('count', function(newVal, oldVal) {
     if (newVal == $scope.imglen) {
       var blob = new Blob([$scope.template.replace("{{data}}", $scope.data)], { type: 'text/html' });
       $scope.fileUrl = ($window.URL || $window.webkitURL).createObjectURL(blob);
       $scope.count = 0;
-    }
-  })
+    };
+  });
 
   $scope.download = function() {
     pullTemplate();
@@ -112,8 +112,8 @@ pamApp.controller('pamExport', function($scope, $window, $http) {
     var result, allMatches = [];
     while((result = regex.exec($scope.data)) != null ) {
       var match = result[1];
-      allMatches.push(match)
-    }
+      allMatches.push(match);
+    };
 
     $scope.imglen = allMatches.length;
     allMatches.forEach( function(m) {
@@ -123,9 +123,9 @@ pamApp.controller('pamExport', function($scope, $window, $http) {
           var re = new RegExp(replace);
           $scope.data = $scope.data.replace(re, "<img src=\"data:image/png;base64, " + obj.data + "\" />");
           $scope.count ++;
-        })
-    })
-  }
+        });
+    });
+  };
 });
 
 pamApp.controller('EditCtrl', function($scope, $http, $routeParams, $location) {
