@@ -1,64 +1,65 @@
 @import url(http://fonts.googleapis.com/css?family=Lato:300);
 @import '../bower_components/bootstrap/less/type.less';
 body {
-    padding-top: 60px;
-    font-family:Lato, sans-serif;
+  padding-top: 60px;
+  font-family:Lato, sans-serif;
+  overflow-x: hidden;
 }
 body .container {
-    max-width: 800px;
-    width: auto;
+  max-width: 800px;
+  width: auto;
 }
 .pam-navbar {
-    margin-left: 0;
+  margin-left: 0;
 }
 .navbar-top {
-    background-color: #3498db;
-    color: #ffffff;
+  background-color: #3498db;
+  color: #ffffff;
 }
 .nav > li > a:hover, .nav > li > a:focus {
-    background-color: #3498db;
+  background-color: #3498db;
 }
 .navbar-bottom {
-    background-color: #fff;
-    border-style: none;
+  background-color: #fff;
+  border-style: none;
 }
 .hide-submit {
-    position: absolute;
-    visibility: hidden;
+  position: absolute;
+  visibility: hidden;
 }
 .result-content {
-    font-family: FontAwesome;
-    border-bottom: 1px solid #efefef;
-    max-height: 150px;
-    overflow: hidden;
+  font-family: FontAwesome;
+  border-bottom: 1px solid #efefef;
+  max-height: 150px;
+  overflow: hidden;
 }
 .results {
-    font-family: FontAwesome;
-    max-width: 100%;
-    display: inline-block;
-    word-wrap: break-word;
-    white-space: normal;
+  font-family: FontAwesome;
+  max-width: 100%;
+  display: inline-block;
+  word-wrap: break-word;
+  white-space: normal;
 }
 .results pre code {
-    white-space: pre-wrap;
+  white-space: pre-wrap;
 }
 .results code {
-    white-space: normal;
-    font-size: 12px;
+  white-space: normal;
+  font-size: 12px;
 }
 .delete-button {
-    cursor: pointer;
-    background: rgba(231, 76, 60, 0.5);
-    border-radius: 10px;
-    padding: 5px;
-    margin-left: 5px;
+  cursor: pointer;
+  background: rgba(231, 76, 60, 0.5);
+  border-radius: 10px;
+  padding: 5px;
+  margin-left: 5px;
 }
 .edit-button {
-    cursor: pointer;
-    background: rgba(52, 152, 219, 0.5);
-    border-radius: 10px;
-    padding: 5px;
-    margin-left: 5px;
+  cursor: pointer;
+  background: rgba(52, 152, 219, 0.5);
+  border-radius: 10px;
+  padding: 5px;
+  margin-left: 5px;
 }
 .download-button {
   cursor: pointer;
@@ -68,125 +69,124 @@ body .container {
   margin-left: 5px;
 }
 .red-alert {
-    color: #e74c3c;
+  color: #e74c3c;
 }
 .center-me {
-    text-align: center;
+  text-align: center;
 }
 .show-more {
-    padding-top: 20px;
-    padding-bottom: 20px;
+  padding-top: 20px;
+  padding-bottom: 20px;
 }
 .result img {
-    font-family: FontAwesome;
-    max-width: 500px;
-    max-height: 400px;
-    display: block;
-    margin: auto;
-    border: 2px solid #888888;
+  font-family: FontAwesome;
+  max-width: 500px;
+  max-height: 400px;
+  display: block;
+  margin: auto;
+  border: 2px solid #888888;
 }
 .subject-header {
-    display: list-item;
-    /*display: break-word;*/
-    list-style: none;
-    margin-left: 15px;
-    width: 25%;
-    position: fixed;
-    overflow: hidden;
-    padding-left: 50px;
+  display: list-item;
+  list-style: none;
+  margin-left: 15px;
+  width: 25%;
+  position: fixed;
+  overflow: hidden;
+  padding-left: 50px;
 }
 .list {
   position: fixed;
-  padding-top: 60px;
-  padding-left: 20px;
-  width: 25%;
+  width: 20%;
   z-index: 1;
+  height: 80%;
+  overflow-x: hidden;
 }
 .subject-list {
-    display: list-item;
-    list-style: none;
-    margin-left: 15px;
-    width: 100%;
-    height: 20px;
-    overflow: hidden;
+  display: list-item;
+  list-style: none;
+  margin-left: 15px;
+  width: 100%;
+  height: 20px;
+  overflow: hidden;
+  height: 100%;
 }
 /* Styling the DIV and Label */
 .subject-list input[type="radio"] + label,
 .subject-list input[type="checkbox"] + label {
-    display: inline-block;
-    font-weight: normal;
-    margin-bottom: 0;
+  display: inline-block;
+  font-weight: normal;
+  margin-bottom: 0;
 }
 .subject-list input[type="radio"] + label div,
 .subject-list input[type="checkbox"] + label div {
-    width: 13px;
+  width: 13px;
 }
 .subject-list input[type="radio"],
 .subject-list input[type="checkbox"] {
-    display: none;
+  display: none;
 }
 /* Hidding the "check" status of inputs */
 .subject-list input[type="radio"] + label .fa-check {
-    display: none;
+  display: none;
 }
 .subject-list input[type="checkbox"] + label .fa-check  {
-    display: none;
+  display: none;
 }
 /* Styling the "check" status */
 .subject-list input[type="radio"]:checked + label .fa-check,
 .subject-list input[type="checkbox"]:checked + label .fa-check {
-    display: block;
-    color: #3498db;
+  display: block;
+  color: #3498db;
 }
 /* Styling checkboxes */
 .subject-list input[type="radio"] + label .fa-square-o,
 .subject-list input[type="checkbox"] + label .fa-square-o {
-    position: relative;
-    bottom: -.53em;
+  position: relative;
+  bottom: -.53em;
 }
 .subject-list input[type="radio"]:checked + label .fa-check,
 .subject-list input[type="checkbox"]:checked + label .fa-check {
-    position: relative;
-    bottom: .56em;
+  position: relative;
+  bottom: .56em;
 }
 .image-action {
-    display: inline-flex;
-    margin-left: 180px;
-    margin-top: -50px;
-    height: 40px;
-    width: 40px;
+  display: inline-flex;
+  margin-left: 180px;
+  margin-top: -50px;
+  height: 40px;
+  width: 40px;
 }
 .image-list {
-    display: inline;
-    list-style: none;
-    margin-top: 20px;
-    width: 200px;
-    height: 100px;
+  display: inline;
+  list-style: none;
+  margin-top: 20px;
+  width: 200px;
+  height: 100px;
 }
 .image-list img {
-    width: 100%;
-    height: 100%;
-    border: 1px solid #888888;
-    box-shadow: 5px 5px 5px #888888;
+  width: 100%;
+  height: 100%;
+  border: 1px solid #888888;
+  box-shadow: 5px 5px 5px #888888;
 }
 .textbox {
-    font-family: FontAwesome;
-    max-width: 100%;
-    height: 300px;
-    overflow-x: hidden;
-    overflow-y: auto;
-    /*cursor: test;*/
-    word-wrap: break-word;
-    resize: both;
+  font-family: FontAwesome;
+  max-width: 100%;
+  height: 300px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  word-wrap: break-word;
+  resize: both;
 }
 .form-control {
-    margin-bottom: 10px;
+  margin-bottom: 10px;
 }
 .form-control img {
-    max-width: 100%;
-    height: auto;
-    width: auto;
+  max-width: 100%;
+  height: auto;
+  width: auto;
 }
 blockquote {
-    font-size: 14px;
+  font-size: 14px;
 }
