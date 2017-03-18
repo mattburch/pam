@@ -109,7 +109,6 @@ body .container {
   width: 100%;
   height: 20px;
   overflow: hidden;
-  height: 100%;
 }
 /* Styling the DIV and Label */
 .subject-list input[type="radio"] + label,
