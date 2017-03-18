@@ -6,7 +6,7 @@
 <div class="row" style="padding-top:60px; padding-left:20px;">
   <div class="list">
     <form>
-      <div ng-repeat="n in noteList | orderBy: 'n.title'" class="subject-list">
+      <div ng-repeat="n in noteList | orderBy: 'title'" class="subject-list">
           <a href="#!/notes/{{n.id}}">{{n.title}}</a>
       </div>
     </form>
